@@ -15,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OPENFORTIVPN_XML_H
-#define OPENFORTIVPN_XML_H
+#ifndef OPENFORTICLI_XML_H
+#define OPENFORTICLI_XML_H
 
 const char *xml_find(char t, const char *tag, const char *buf, int nest);
 char *xml_get(const char *buf);

@@ -26,8 +26,8 @@
  *  all source files in the program, then also delete it here.
  */
 
-#ifndef OPENFORTIVPN_TUNNEL_H
-#define OPENFORTIVPN_TUNNEL_H
+#ifndef OPENFORTICLI_TUNNEL_H
+#define OPENFORTICLI_TUNNEL_H
 
 #include "config.h"
 #include "io.h"

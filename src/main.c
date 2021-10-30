@@ -74,7 +74,7 @@
 #endif
 
 #define usage \
-"Usage: openfortivpn [<host>[:<port>]] [-u <user>] [-p <pass>]\n" \
+"Usage: openforticli [<host>[:<port>]] [-u <user>] [-p <pass>]\n" \
 "                    [--otp=<otp>] [--otp-delay=<delay>] [--otp-prompt=<prompt>]\n" \
 "                    [--pinentry=<program>] [--realm=<realm>]\n" \
 "                    [--ifname=<ifname>] [--set-routes=<0|1>]\n" \
@@ -84,13 +84,13 @@ PPPD_USAGE \
 "                    [--user-cert=<file>] [--user-key=<file>]\n" \
 "                    [--use-syslog] [--trusted-cert=<digest>]\n" \
 "                    [--persistent=<interval>] [-c <file>] [-v|-q]\n" \
-"       openfortivpn --help\n" \
-"       openfortivpn --version\n" \
+"       openforticli --help\n" \
+"       openforticli --version\n" \
 "\n"
 
 #define summary \
-"Client for PPP+SSL VPN tunnel services.\n" \
-"openfortivpn connects to a VPN by setting up a tunnel to the gateway at\n" \
+"Command-Line Interface for PPP+SSL VPN tunnel services.\n" \
+"openforticli connects to a VPN by setting up a tunnel to the gateway at\n" \
 "<host>:<port>. It spawns a pppd process and operates the communication between\n" \
 "the gateway and this process.\n" \
 "\n"
@@ -109,7 +109,7 @@ PPPD_USAGE \
 "  -h --help                     Show this help message and exit.\n" \
 "  --version                     Show version and exit.\n" \
 "  -c <file>, --config=<file>    Specify a custom configuration file (default:\n" \
-"                                " SYSCONFDIR "/openfortivpn/config).\n" \
+"                                " SYSCONFDIR "/openforticli/config).\n" \
 "  -u <user>, --username=<user>  VPN account username.\n" \
 "  -p <pass>, --password=<pass>  VPN account password.\n" \
 "  -o <otp>, --otp=<otp>         One-Time-Password.\n" \
@@ -119,12 +119,12 @@ PPPD_USAGE \
 "  --pinentry=<program>          Use the program to supply a secret instead of asking for it.\n" \
 "  --realm=<realm>               Use specified authentication realm.\n" \
 "  --ifname=<interface>          Bind to interface.\n" \
-"  --set-routes=[01]             Set if openfortivpn should configure routes\n" \
+"  --set-routes=[01]             Set if openforticli should configure routes\n" \
 "                                when tunnel is up.\n" \
 "  --no-routes                   Do not configure routes, same as --set-routes=0.\n" \
 "  --half-internet-routes=[01]   Add two 0.0.0.0/1 and 128.0.0.0/1 routes with higher\n" \
 "                                priority instead of replacing the default route.\n" \
-"  --set-dns=[01]                Set if openfortivpn should add DNS name servers\n" \
+"  --set-dns=[01]                Set if openforticli should add DNS name servers\n" \
 "                                and domain search list in /etc/resolv.conf.\n" \
 "                                If installed resolvconf is used for the update.\n" \
 "  --no-dns                      Do not reconfigure DNS, same as --set-dns=0.\n" \
@@ -171,7 +171,7 @@ PPPD_USAGE \
 "Configuration file:\n" \
 "  Options can be taken from a configuration file. Options passed in the\n" \
 "  command line will override those from the configuration file, though. The\n" \
-"  default configuration file is " SYSCONFDIR "/openfortivpn/config,\n" \
+"  default configuration file is " SYSCONFDIR "/openforticli/config,\n" \
 "  but this can be set using the -c option.\n" \
 "  A simple configuration file example looks like:\n" \
 "      # this is a comment\n" \
@@ -181,12 +181,12 @@ PPPD_USAGE \
 "      password = bar\n" \
 "      trusted-cert = certificatedigest4daa8c5fe6c...\n" \
 "      trusted-cert = othercertificatedigest6631bf...\n" \
-"  For a full-featured configuration see man openfortivpn(1).\n"
+"  For a full-featured configuration see man openforticli(1).\n"
 
 int main(int argc, char **argv)
 {
 	int ret = EXIT_FAILURE;
-	const char *config_file = SYSCONFDIR "/openfortivpn/config";
+	const char *config_file = SYSCONFDIR "/openforticli/config";
 	const char *host;
 	char *port_str;
 
@@ -553,7 +553,7 @@ int main(int argc, char **argv)
 
 	log_debug_all("ATTENTION: the output contains sensitive information such as the THE CLEAR TEXT PASSWORD.\n");
 
-	log_debug("openfortivpn " VERSION "\n");
+	log_debug("openforticli " VERSION "\n");
 	if (strcmp(&REVISION[1], VERSION))
 		log_debug("revision " REVISION "\n");
 

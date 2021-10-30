@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Copyright (C) 2015 Adrien Vergé
 
-"""Enforce maximum line length in openfortivpn C source code.
+"""Enforce maximum line length in openforticli C source code.
 
 Example
 -------
@@ -12,7 +12,7 @@ Example
 
 Notes
 -----
-This script has been working so far for openfortivpn.
+This script has been working so far for openforticli.
 It has not been widely tested. It may not work on any C source file.
 
 """

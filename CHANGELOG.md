@@ -1,4 +1,4 @@
-Openfortivpn Changelog
+Openforticli Changelog
 ======================
 
 Legend
@@ -34,7 +34,7 @@ On the master branch there may be changes that are not (yet) described here.
 * [~] add a space at the end of the OTP prompt
 * [-] improve tunnel speed on macOS
 * [-] modify memory allocation in the tunnel configuration structure
-* [+] openfortivpn returns the PPP exit status
+* [+] openforticli returns the PPP exit status
 * [+] print SSL socket options in log
 
 ### 1.15.0
@@ -165,7 +165,7 @@ On the master branch there may be changes that are not (yet) described here.
 * [+] Support systemd notification upon tunnel up
 * [+] Support building in a separate directory
 * [~] Change the way to read passwords such that backspace etc. should work as usual
-* [~] Rationalize DNS options: pppd and openfortivpn were updating /etc/resolv.conf.
+* [~] Rationalize DNS options: pppd and openforticli were updating /etc/resolv.conf.
   Check man page and help output for the documentation of the current behavior.
 
 ### 1.7.1
@@ -314,29 +314,29 @@ On the master branch there may be changes that are not (yet) described here.
 * [+] Add ability to type password interactively
 * [+] Verify gateway's X509 certificate
 * [-] Don't delete nameservers at tear down if they were here before
-* [~] Set /etc/openfortivpn/config not readable by other users
+* [~] Set /etc/openforticli/config not readable by other users
 * [+] Add ability to use a configuration file
 
 ### 1.0.0
 
-* Start tracking openfortivpn - in this version with the following features:
+* Start tracking openforticli - in this version with the following features:
 ```
-Usage: openfortivpn <host>:<port> -u <user> -p <pass>
+Usage: openforticli <host>:<port> -u <user> -p <pass>
                     [--no-routes] [--no-dns] [--pppd-log=<filename>]
                     [-v|-q]
-       openfortivpn --help
-       openfortivpn --version
+       openforticli --help
+       openforticli --version
 ```
 
 ### Details of the changes
 
-This is a high level changelog meant to provide a rough overview about the version history of openfortivpn. Please see the Github [commit history](https://github.com/adrienverge/openfortivpn/commits) for more details of the individual changes listed here, and for a complete list of the internal code changes.
+This is a high level changelog meant to provide a rough overview about the version history of openforticli. Please see the Github [commit history](https://github.com/adrienverge/openforticli/commits) for more details of the individual changes listed here, and for a complete list of the internal code changes.
 
 More Information
 ----------------
 
 * For a list of known issues please check the
-  [issues list](https://github.com/adrienverge/openfortivpn/issues) on GitHub.
+  [issues list](https://github.com/adrienverge/openforticli/issues) on GitHub.
 
 * We try to avoid backwards incompatible changes, but sometimes it is not
   avoidable. When we are aware of compatibility issues, then we recommend to

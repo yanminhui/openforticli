@@ -15,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OPENFORTIVPN_CONFIG_H
-#define OPENFORTIVPN_CONFIG_H
+#ifndef OPENFORTICLI_CONFIG_H
+#define OPENFORTICLI_CONFIG_H
 
 #include <netinet/in.h>
 #include <net/if.h>

@@ -1,0 +1,13 @@
+[Unit]
+Description=Openforticli for %I
+After=network-online.target
+Documentation=man:openforticli(1)
+
+[Service]
+Type=notify
+PrivateTmp=true
+ExecStart=@BINDIR@/openforticli -c @SYSCONFDIR@/openforticli/%I.conf
+OOMScoreAdjust=-100
+
+[Install]
+WantedBy=multi-user.target

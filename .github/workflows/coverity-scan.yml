@@ -16,7 +16,7 @@ jobs:
 
       - name: Download the Coverity Scan Build Tool
         run: |
-          wget -q https://scan.coverity.com/download/cxx/linux64 --post-data "token=$TOKEN&project=adrienverge%2Fopenfortivpn" -O cov-analysis-linux64.tar.gz
+          wget -q https://scan.coverity.com/download/cxx/linux64 --post-data "token=$TOKEN&project=adrienverge%2Fopenforticli" -O cov-analysis-linux64.tar.gz
           mkdir cov-analysis-linux64
           tar xzf cov-analysis-linux64.tar.gz --strip 1 -C cov-analysis-linux64
         env:
@@ -31,13 +31,13 @@ jobs:
 
       - name: Upload the Project Build
         run: |
-          tar caf openfortivpn.xz cov-int
+          tar caf openforticli.xz cov-int
           curl \
             --form token=$TOKEN \
             --form email=DimitriPapadopoulos@users.noreply.github.com \
-            --form file=@openfortivpn.xz \
+            --form file=@openforticli.xz \
             --form version=coverity_scan \
-            --form description="Client for PPP+SSL VPN tunnel services" \
-            https://scan.coverity.com/builds?project=adrienverge%2Fopenfortivpn
+            --form description="Command-Line Interface for PPP+SSL VPN tunnel services" \
+            https://scan.coverity.com/builds?project=adrienverge%2Fopenforticli
         env:
           TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}

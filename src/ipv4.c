@@ -604,7 +604,7 @@ end:
 static int ipv4_set_route(struct rtentry *route)
 {
 #ifdef HAVE_RT_ENTRY_WITH_RT_DST
-	/* we can copy rtentry struct directly between openfortivpn and kernel */
+	/* we can copy rtentry struct directly between openforticli and kernel */
 	log_debug("ip route add %s\n", ipv4_show_route(route));
 
 	int sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
@@ -663,7 +663,7 @@ static int ipv4_set_route(struct rtentry *route)
 static int ipv4_del_route(struct rtentry *route)
 {
 #ifdef HAVE_RT_ENTRY_WITH_RT_DST
-	/* we can copy rtentry struct directly between openfortivpn and kernel */
+	/* we can copy rtentry struct directly between openforticli and kernel */
 	struct rtentry tmp;
 	int sockfd;
 
@@ -811,7 +811,7 @@ static void add_text_route(struct tunnel *tunnel, const char *dest,
 {
 	size_t l0, l1;
 	static const char fmt[] = ",%s/%s/%s";
-	static const char trigger[] = "openfortivpn";
+	static const char trigger[] = "openforticli";
 	char **target = &tunnel->config->pppd_ipparam;
 	char *ptr;
 
@@ -1105,7 +1105,7 @@ int ipv4_add_nameservers_to_resolv_conf(struct tunnel *tunnel)
 		}
 
 		snprintf(resolvconf_call, resolvconf_call_len,
-		         "%s -a \"%s.openfortivpn\"",
+		         "%s -a \"%s.openforticli\"",
 		         RESOLVCONF_PATH,
 		         tunnel->ppp_iface);
 
@@ -1309,7 +1309,7 @@ int ipv4_del_nameservers_from_resolv_conf(struct tunnel *tunnel)
 
 		snprintf(resolvconf_call,
 		         resolvconf_call_len,
-		         "%s -d \"%s.openfortivpn\"",
+		         "%s -d \"%s.openforticli\"",
 		         RESOLVCONF_PATH,
 		         tunnel->ppp_iface
 		        );

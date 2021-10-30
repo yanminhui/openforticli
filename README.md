@@ -1,7 +1,7 @@
-openfortivpn
+openforticli
 ============
 
-openfortivpn is a client for PPP+SSL VPN tunnel services.
+openforticli is a client for PPP+SSL VPN tunnel services.
 It spawns a pppd process and operates the communication between the gateway and
 this process.
 
@@ -11,7 +11,7 @@ Usage
 --------
 
 ```
-man openfortivpn
+man openforticli
 ```
 
 Examples
@@ -19,35 +19,35 @@ Examples
 
 * Simply connect to a VPN:
   ```
-  openfortivpn vpn-gateway:8443 --username=foo
+  openforticli vpn-gateway:8443 --username=foo
   ```
 
 * Connect to a VPN using an authentication realm:
   ```
-  openfortivpn vpn-gateway:8443 --username=foo --realm=bar
+  openforticli vpn-gateway:8443 --username=foo --realm=bar
   ```
 
 * Store password securely with a pinentry program:
   ```
-  openfortivpn vpn-gateway:8443 --username=foo --pinentry=pinentry-mac
+  openforticli vpn-gateway:8443 --username=foo --pinentry=pinentry-mac
   ```
 
 * Connect with a user certificate and no password:
   ```
-  openfortivpn vpn-gateway:8443 --username= --password= --user-cert=cert.pem --user-key=key.pem
+  openforticli vpn-gateway:8443 --username= --password= --user-cert=cert.pem --user-key=key.pem
   ```
 
 * Don't set IP routes and don't add VPN nameservers to `/etc/resolv.conf`:
   ```
-  openfortivpn vpn-gateway:8443 -u foo --no-routes --no-dns --pppd-no-peerdns
+  openforticli vpn-gateway:8443 -u foo --no-routes --no-dns --pppd-no-peerdns
   ```
 
 * Using a configuration file:
   ```
-  openfortivpn -c /etc/openfortivpn/my-config
+  openforticli -c /etc/openforticli/my-config
   ```
 
-  With `/etc/openfortivpn/my-config` containing:
+  With `/etc/openforticli/my-config` containing:
   ```
   host = vpn-gateway
   port = 8443
@@ -60,7 +60,7 @@ Examples
 
 * For the full list of config options, see the `CONFIGURATION` section of
   ```
-  man openfortivpn
+  man openforticli
   ```
 
 Smartcard
@@ -68,7 +68,7 @@ Smartcard
 
 Smartcard support needs `openssl pkcs engine` and `opensc` to be installed.
 The pkcs11-engine from libp11 needs to be compiled with p11-kit-devel installed.
-Check [#464](https://github.com/adrienverge/openfortivpn/issues/464) for a discussion
+Check [#464](https://github.com/adrienverge/openforticli/issues/464) for a discussion
 of known issues in this area.
 
 To make use of your smartcard put at least `pkcs11:` to the user-cert config or commandline
@@ -95,35 +95,35 @@ Installing
 
 ### Installing existing packages
 
-Some Linux distributions provide `openfortivpn` packages:
-* [Fedora / CentOS](https://apps.fedoraproject.org/packages/openfortivpn)
-* [openSUSE / SLE](https://software.opensuse.org/package/openfortivpn)
-* [Gentoo](https://packages.gentoo.org/packages/net-vpn/openfortivpn)
-* [NixOS](https://github.com/NixOS/nixpkgs/tree/master/pkgs/tools/networking/openfortivpn)
-* [Arch Linux](https://www.archlinux.org/packages/community/x86_64/openfortivpn)
-* [Debian](https://packages.debian.org/stable/openfortivpn)
-* [Ubuntu](https://packages.ubuntu.com/search?keywords=openfortivpn)
-* [Solus](https://dev.getsol.us/source/openfortivpn/)
+Some Linux distributions provide `openforticli` packages:
+* [Fedora / CentOS](https://apps.fedoraproject.org/packages/openforticli)
+* [openSUSE / SLE](https://software.opensuse.org/package/openforticli)
+* [Gentoo](https://packages.gentoo.org/packages/net-vpn/openforticli)
+* [NixOS](https://github.com/NixOS/nixpkgs/tree/master/pkgs/tools/networking/openforticli)
+* [Arch Linux](https://www.archlinux.org/packages/community/x86_64/openforticli)
+* [Debian](https://packages.debian.org/stable/openforticli)
+* [Ubuntu](https://packages.ubuntu.com/search?keywords=openforticli)
+* [Solus](https://dev.getsol.us/source/openforticli/)
 
-On macOS both [Homebrew](https://formulae.brew.sh/formula/openfortivpn) and
-[MacPorts](https://ports.macports.org/port/openfortivpn)
-provide an `openfortivpn` package.
-Either [install Homebrew](https://brew.sh/) then install openfortivpn:
+On macOS both [Homebrew](https://formulae.brew.sh/formula/openforticli) and
+[MacPorts](https://ports.macports.org/port/openforticli)
+provide an `openforticli` package.
+Either [install Homebrew](https://brew.sh/) then install openforticli:
 ```shell
 # Install 'Homebrew'
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-# Install 'openfortivpn'
-brew install openfortivpn
+# Install 'openforticli'
+brew install openforticli
 ```
 
-or [install MacPorts](https://www.macports.org/install.php) then install openfortivpn:
+or [install MacPorts](https://www.macports.org/install.php) then install openforticli:
 ```shell
-# Install 'openfortivpn'
-sudo port install openfortivpn
+# Install 'openforticli'
+sudo port install openforticli
 ```
 
-A more complete overview can be obtained from [repology](https://repology.org/project/openfortivpn/versions).
+A more complete overview can be obtained from [repology](https://repology.org/project/openforticli/versions).
 
 ### Building and installing from source
 
@@ -177,28 +177,28 @@ For other distros, you'll need to build and install from source:
 Running as root?
 ----------------
 
-openfortivpn needs elevated privileges at three steps during tunnel set up:
+openforticli needs elevated privileges at three steps during tunnel set up:
 
 * when spawning a `/usr/sbin/pppd` process;
 * when setting IP routes through VPN (when the tunnel is up);
 * when adding nameservers to `/etc/resolv.conf` (when the tunnel is up).
 
-For these reasons, you need to use `sudo openfortivpn`.
+For these reasons, you need to use `sudo openforticli`.
 If you need it to be usable by non-sudoer users, you might consider adding an
 entry in `/etc/sudoers` or a file under `/etc/sudoers.d`.
 
 For example:
-`visudo -f /etc/sudoers.d/openfortivpn`
+`visudo -f /etc/sudoers.d/openforticli`
 ```
-Cmnd_Alias  OPENFORTIVPN = /usr/bin/openfortivpn
+Cmnd_Alias  Openforticli = /usr/bin/openforticli
 
-%adm       ALL = (ALL) OPENFORTIVPN
+%adm       ALL = (ALL) Openforticli
 ```
-Adapt the above example by changing the `openfortivpn` path or choosing
-a group different from `adm` - such as a dedicated `openfortivpn` group.
+Adapt the above example by changing the `openforticli` path or choosing
+a group different from `adm` - such as a dedicated `openforticli` group.
 
-**Warning**: Make sure only trusted users can run openfortivpn as root!
-As described in [#54](https://github.com/adrienverge/openfortivpn/issues/54),
+**Warning**: Make sure only trusted users can run openforticli as root!
+As described in [#54](https://github.com/adrienverge/openforticli/issues/54),
 a malicious user could use `--pppd-plugin` and `--pppd-log` options to divert
 the program's behaviour.
 

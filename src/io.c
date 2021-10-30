@@ -642,7 +642,7 @@ int io_loop(struct tunnel *tunnel)
 	 *   - with TCP_NODELAY:                   ~ 4000 kbit/s
 	 *   - without TCP_NODELAY:                ~ 1200 kbit/s
 	 *   - forticlientsslvpn from Fortinet:    ~ 3700 kbit/s
-	 *   - openfortivpn, Python version:       ~ 2000 kbit/s
+	 *   - openforticli, Python version:       ~ 2000 kbit/s
 	 *     (with or without TCP_NODELAY)
 	 */
 	if (setsockopt(tunnel->ssl_socket, IPPROTO_TCP, TCP_NODELAY,

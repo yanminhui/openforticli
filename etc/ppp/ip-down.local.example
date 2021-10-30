@@ -1,9 +1,9 @@
 #!/bin/bash
 
 case "$PPP_IPPARAM" in
-    openfortivpn*)
+    openforticli*)
         rconf=/etc/resolv.conf
-        [[ -f $rconf.openfortivpn ]] && cp -pv $rconf.openfortivpn $rconf
+        [[ -f $rconf.openforticli ]] && cp -pv $rconf.openforticli $rconf
         exit 0
         ;;
 esac 2>&1 | logger -p daemon.debug -i -t "$0"

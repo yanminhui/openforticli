@@ -11,4 +11,4 @@ currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
-Send an email to security@openfortivpn.org.
+Send an email to security@openforticli.org.

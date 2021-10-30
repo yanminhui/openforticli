@@ -18,4 +18,4 @@ fi
 autoconf
 automake --add-missing
 
-echo "now you can run ./configure && make to build openfortivpn"
+echo "now you can run ./configure && make to build openforticli"

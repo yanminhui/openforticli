@@ -15,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OPENFORTIVPN_USERINPUT_H
-#define OPENFORTIVPN_USERINPUT_H
+#ifndef OPENFORTICLI_USERINPUT_H
+#define OPENFORTICLI_USERINPUT_H
 
 #include <stddef.h>
 

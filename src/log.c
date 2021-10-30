@@ -79,7 +79,7 @@ void set_syslog(int use_syslog)
 	if (!use_syslog)
 		return;
 	do_syslog = use_syslog;
-	openlog("openfortivpn", LOG_PID, LOG_DAEMON);
+	openlog("openforticli", LOG_PID, LOG_DAEMON);
 }
 
 void increase_verbosity(void)

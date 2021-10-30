@@ -15,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OPENFORTIVPN_IO_H
-#define OPENFORTIVPN_IO_H
+#ifndef OPENFORTICLI_IO_H
+#define OPENFORTICLI_IO_H
 
 #include <sys/types.h>
 #include <pthread.h>

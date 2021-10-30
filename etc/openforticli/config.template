@@ -1,4 +1,4 @@
-### configuration file for openfortivpn, see man openfortivpn(1) ###
+### configuration file for Openforticli, see man Openforticli(1) ###
 
 host = vpn.example.org
 port = 443

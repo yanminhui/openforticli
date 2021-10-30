@@ -1,21 +1,21 @@
 # http://mij.oltrelinux.com/devel/autoconf-automake/
 
-bin_PROGRAMS = openfortivpn
-openfortivpn_SOURCES = src/config.c src/config.h src/hdlc.c src/hdlc.h \
+bin_PROGRAMS = openforticli
+openforticli_SOURCES = src/config.c src/config.h src/hdlc.c src/hdlc.h \
 		       src/http.c src/http.h src/io.c src/io.h src/ipv4.c \
 		       src/ipv4.h src/log.c src/log.h src/tunnel.c \
 		       src/tunnel.h src/main.c src/ssl.h src/xml.c \
 		       src/xml.h src/userinput.c src/userinput.h \
 		       src/openssl_hostname_validation.c \
 		       src/openssl_hostname_validation.h
-openfortivpn_CPPFLAGS = -DSYSCONFDIR=\"$(sysconfdir)\" \
+openforticli_CPPFLAGS = -DSYSCONFDIR=\"$(sysconfdir)\" \
 			-DPPP_PATH=\"@PPP_PATH@\" \
 			-DNETSTAT_PATH=\"@NETSTAT_PATH@\" \
 			-DRESOLVCONF_PATH=\"@RESOLVCONF_PATH@\" \
 			-DREVISION=\"@REVISION@\" \
 			 $(OPENSSL_CFLAGS) $(LIBSYSTEMD_CFLAGS)
-openfortivpn_CFLAGS = -Wall -pedantic
-openfortivpn_LDADD = $(OPENSSL_LIBS) $(LIBSYSTEMD_LIBS)
+openforticli_CFLAGS = -Wall -pedantic
+openforticli_LDADD = $(OPENSSL_LIBS) $(LIBSYSTEMD_LIBS)
 
 PATHFILES =
 CLEAN_LOCALS =
@@ -32,61 +32,61 @@ DISTCHECK_CONFIGURE_FLAGS = \
 
 # configuration file template
 datadir=$(prefix)/share/@PACKAGE@
-data_DATA=etc/openfortivpn/config.template
+data_DATA=etc/openforticli/config.template
 
 EXTRA_DIST += $(data_DATA)
 
 # initial configuration file
 confdir=$(sysconfdir)/@PACKAGE@
 
-etc/openfortivpn/config: $(srcdir)/etc/openfortivpn/config.template
-	@$(MKDIR_P) etc/openfortivpn
-	$(AM_V_GEN)$(SED) -e '/^#/n;/^\s*$$/n;s/^/# /' $(srcdir)/etc/openfortivpn/config.template >$@
+etc/openforticli/config: $(srcdir)/etc/openforticli/config.template
+	@$(MKDIR_P) etc/openforticli
+	$(AM_V_GEN)$(SED) -e '/^#/n;/^\s*$$/n;s/^/# /' $(srcdir)/etc/openforticli/config.template >$@
 
-install-data-hook: etc/openfortivpn/config
+install-data-hook: etc/openforticli/config
 	if ! test -f $(DESTDIR)$(confdir)/config ; then \
 		$(MKDIR_P) $(DESTDIR)$(confdir) ; \
-		$(INSTALL) -m 600 etc/openfortivpn/config \
+		$(INSTALL) -m 600 etc/openforticli/config \
 			$(DESTDIR)$(confdir)/config ; \
 	fi
 
 clean-local-config:
-	-rm -f $(top_builddir)/etc/openfortivpn/config
+	-rm -f $(top_builddir)/etc/openforticli/config
 
 CLEAN_LOCALS += clean-local-config
 
 # systemd service file
-PATHFILES += lib/systemd/system/openfortivpn@.service
+PATHFILES += lib/systemd/system/openforticli@.service
 
 if HAVE_SYSTEMD
-lib/systemd/system/openfortivpn@.service: $(srcdir)/lib/systemd/system/openfortivpn@.service.in
+lib/systemd/system/openforticli@.service: $(srcdir)/lib/systemd/system/openforticli@.service.in
 	@$(MKDIR_P) lib/systemd/system
-	$(AM_V_GEN)$(SED) -e 's|[@]BINDIR[@]|$(bindir)|g;s|[@]SYSCONFDIR[@]|$(sysconfdir)|g' $(srcdir)/lib/systemd/system/openfortivpn@.service.in >$@
+	$(AM_V_GEN)$(SED) -e 's|[@]BINDIR[@]|$(bindir)|g;s|[@]SYSCONFDIR[@]|$(sysconfdir)|g' $(srcdir)/lib/systemd/system/openforticli@.service.in >$@
 
-systemdsystemunit_DATA = lib/systemd/system/openfortivpn@.service
+systemdsystemunit_DATA = lib/systemd/system/openforticli@.service
 
 clean-local-systemd:
-	-rm -f $(top_builddir)/lib/systemd/system/openfortivpn@.service
+	-rm -f $(top_builddir)/lib/systemd/system/openforticli@.service
 
 CLEAN_LOCALS += clean-local-systemd
 endif
 
 # man page
-PATHFILES += doc/openfortivpn.1
-dist_man_MANS = doc/openfortivpn.1
+PATHFILES += doc/openforticli.1
+dist_man_MANS = doc/openforticli.1
 
-doc/openfortivpn.1: $(srcdir)/doc/openfortivpn.1.in
+doc/openforticli.1: $(srcdir)/doc/openforticli.1.in
 	@$(MKDIR_P) doc
-	$(AM_V_GEN)$(SED) -e 's|[@]SYSCONFDIR[@]|$(sysconfdir)|g;s|[@]DATADIR[@]|$(datadir)|g' $(srcdir)/doc/openfortivpn.1.in >$@
+	$(AM_V_GEN)$(SED) -e 's|[@]SYSCONFDIR[@]|$(sysconfdir)|g;s|[@]DATADIR[@]|$(datadir)|g' $(srcdir)/doc/openforticli.1.in >$@
 
 clean-local-man:
-	-rm -f $(top_builddir)/doc/openfortivpn.1
+	-rm -f $(top_builddir)/doc/openforticli.1
 
 CLEAN_LOCALS += clean-local-man
 
 
 EXTRA_DIST += $(PATHFILES:=.in)
 
-all-local: etc/openfortivpn/config
+all-local: etc/openforticli/config
 
 clean-local: $(CLEAN_LOCALS)

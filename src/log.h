@@ -15,8 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OPENFORTIVPN_LOG_H
-#define OPENFORTIVPN_LOG_H
+#ifndef OPENFORTICLI_LOG_H
+#define OPENFORTICLI_LOG_H
 
 #include <stddef.h>
 #include <stdint.h>
