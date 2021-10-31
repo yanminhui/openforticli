@@ -27,6 +27,7 @@
  */
 
 #include "config.h"
+#include "patch.h"
 #include "log.h"
 
 #include <openssl/x509.h>  /* work around OpenSSL bug: missing definition of STACK_OF */

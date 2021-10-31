@@ -192,6 +192,7 @@ int main(int argc, char **argv)
 	const char *config_file = SYSCONFDIR "/openforticli/config";
 	const char *host;
 	char *port_str;
+	char host_list[GATEWAY_HOST_SIZE + 1];
 
 	struct vpn_config cfg = {
 		.gateway_host = {'\0'},
@@ -671,7 +672,11 @@ int main(int argc, char **argv)
 		goto exit;
 	}
 
+	strncpy(host_list, cfg.gateway_host, GATEWAY_HOST_SIZE);
 	do {
+		preferred_host(host_list, cfg.gateway_host, GATEWAY_HOST_SIZE);
+		cfg.gateway_host[GATEWAY_HOST_SIZE] = '\0';
+
 		if (run_tunnel(&cfg) != 0)
 			ret = EXIT_FAILURE;
 		else

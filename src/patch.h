@@ -18,6 +18,8 @@
 #ifndef OPENFORTICLI_PATCH_H
 #define OPENFORTICLI_PATCH_H
 
+#include <stddef.h>
+
 /*
  * patch_totp_generate:
  * @base32_secret: the shared secret string
@@ -31,5 +33,18 @@
  * Returns: On success, zero is returned, otherwise an error code is returned.
  */
 extern int patch_totp_generate(const char *base32_secret, char *output_otp);
+
+/*
+ * return interval ms if true else -1.
+ */
+extern double ping_host_ip(const char *domain);
+
+/*
+ * preferred_host:
+ * @hosts: the host list join by `;`
+ * @output_host: output buffer, must have room for the output host plus zero
+ * @num: maximum number of characters to be copied from source
+ */
+extern void preferred_host(char *hosts, char *output_host, size_t num);
 
 #endif
