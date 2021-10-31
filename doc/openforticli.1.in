@@ -10,8 +10,10 @@ openforticli \- Command-Line Interface for PPP+SSL VPN tunnel services
 [\fB\-p\fR \fI<pass>\fR]
 [\fB\-\-pinentry=\fI<name>\fR]
 [\fB\-\-otp=\fI<otp>\fR]
+[\fB\-\-otp\-secret=\fI<secret>\fR]
 [\fB\-\-otp\-prompt=\fI<prompt>\fR]
 [\fB\-\-otp\-delay=\fI<delay>\fR]
+[\fB\-\-otp\-dump\fR]
 [\fB\-\-no\-ftm\-push\fR]
 [\fB\-\-realm=\fI<realm>\fR]
 [\fB\-\-ifname=\fI<interface>\fR]
@@ -79,6 +81,9 @@ For example: pinentry-gnome3 on Linux, or pinentry-mac on macOS.
 \fB\-o \fI<otp>\fR, \fB\-\-otp=\fI<otp>\fR
 One-Time-Password.
 .TP
+\fB\-\-otp\-secret=\fI<secret>\fR
+One-Time-Password's secret key with base32 encode.
+.TP
 \fB\-\-otp\-prompt=\fI<prompt>\fR
 Search for the OTP password prompt starting with the string \fI<prompt>\fR.
 .TP
@@ -86,6 +91,9 @@ Search for the OTP password prompt starting with the string \fI<prompt>\fR.
 Set the amount of time to wait before sending the One-Time-Password.
 The delay time must be specified in seconds, where 0 means
 no wait (this is the default).
+.TP
+\fB\-\-otp\-dump\fR
+Dump One-Time-Password.
 .TP
 \fB\-\-no\-ftm\-push\fR
 Do not use FTM push if the server provides the option.
@@ -310,6 +318,8 @@ username = foo
 # useful for a gui that passes a configuration file to openforticli
 .br
 # otp = 123456
+.br
+# otp\-secret = 4PUFUMZDCESN746V
 .br
 # otp\-delay = 0
 .br

@@ -47,8 +47,10 @@ const struct vpn_config invalid_cfg = {
 	.password = {'\0'},
 	.password_set = 0,
 	.otp = {'\0'},
+	.otp_secret = {'\0'},
 	.otp_prompt = NULL,
 	.otp_delay = -1,
+	.otp_dump = -1,
 	.no_ftm_push = -1,
 	.pinentry = NULL,
 	.realm = {'\0'},
@@ -262,6 +264,9 @@ int load_config(struct vpn_config *cfg, const char *filename)
 		} else if (strcmp(key, "otp") == 0) {
 			strncpy(cfg->otp, val, OTP_SIZE);
 			cfg->otp[OTP_SIZE] = '\0';
+		} else if (strcmp(key, "otp-secret") == 0) {
+			strncpy(cfg->otp_secret, val, OTP_SECRET_SIZE);
+			cfg->otp_secret[OTP_SECRET_SIZE] = '\0';
 		} else if (strcmp(key, "otp-prompt") == 0) {
 			free(cfg->otp_prompt);
 			cfg->otp_prompt = strdup(val);
@@ -274,6 +279,15 @@ int load_config(struct vpn_config *cfg, const char *filename)
 				continue;
 			}
 			cfg->otp_delay = otp_delay;
+		} else if (strcmp(key, "otp-dump") == 0) {
+			int otp_dump = strtob(val);
+
+			if (otp_dump < 0) {
+				log_warn("Bad otp_dump in configuration file: \"%s\".\n",
+				         val);
+				continue;
+			}
+			cfg->otp_dump = otp_dump;
 		} else if (strcmp(key, "no-ftm-push") == 0) {
 			int no_ftm_push = strtob(val);
 
@@ -514,8 +528,12 @@ void merge_config(struct vpn_config *dst, struct vpn_config *src)
 	}
 	if (src->otp[0])
 		strcpy(dst->otp, src->otp);
+	if (src->otp_secret[0])
+		strcpy(dst->otp_secret, src->otp_secret);
 	if (src->otp_delay != invalid_cfg.otp_delay)
 		dst->otp_delay = src->otp_delay;
+	if (src->otp_dump != invalid_cfg.otp_dump)
+		dst->otp_dump = src->otp_dump;
 	if (src->no_ftm_push != invalid_cfg.no_ftm_push)
 		dst->no_ftm_push = src->no_ftm_push;
 	if (src->pinentry) {

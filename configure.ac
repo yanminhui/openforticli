@@ -36,6 +36,7 @@ PKG_CHECK_MODULES(OPENSSL, [libssl >= 0.9.8 libcrypto >= 0.9.8], [], [AC_MSG_ERR
 AC_CHECK_LIB([pthread], [pthread_create], [], [AC_MSG_ERROR([Cannot find libpthread.])])
 AC_CHECK_LIB([util], [forkpty], [], [AC_MSG_ERROR([Cannot find libutil.])])
 PKG_CHECK_MODULES(LIBSYSTEMD, [libsystemd], [AC_DEFINE(HAVE_SYSTEMD)], [AC_MSG_RESULT([libsystemd not present])])
+PKG_CHECK_MODULES(LIBOATH, [liboath], [AC_DEFINE(HAVE_OATH)], [AC_MSG_RESULT([liboath not present])])
 
 # we assume presence of the following C standard headers
 # and omit them in the following header checks

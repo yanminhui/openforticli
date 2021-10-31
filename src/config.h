@@ -62,6 +62,7 @@ struct x509_digest {
 #define USERNAME_SIZE	64
 #define PASSWORD_SIZE	256
 #define OTP_SIZE	64
+#define OTP_SECRET_SIZE 256
 #define REALM_SIZE	63
 #define PEM_PASSPHRASE_SIZE	31
 
@@ -90,8 +91,10 @@ struct vpn_config {
 	char		password[PASSWORD_SIZE + 1];
 	int		password_set;
 	char		otp[OTP_SIZE + 1];
+	char		otp_secret[OTP_SECRET_SIZE + 1];
 	char		*otp_prompt;
 	unsigned int	otp_delay;
+	int		otp_dump;
 	int		no_ftm_push;
 	char		*pinentry;
 	char		iface_name[IF_NAMESIZE];

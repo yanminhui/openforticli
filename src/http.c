@@ -21,6 +21,7 @@
 #include "ipv4.h"
 #include "userinput.h"
 #include "log.h"
+#include "patch.h"
 
 #include <unistd.h>
 #include <arpa/inet.h>
@@ -583,23 +584,33 @@ static int try_otp_auth(struct tunnel *tunnel, const char *buffer,
 			size_t l;
 
 			v = NULL;
-			if (cfg->otp[0] == '\0') {
-				// Interactively ask user for OTP
-				char hint[USERNAME_SIZE + 1 + REALM_SIZE + 1 + GATEWAY_HOST_SIZE + 5];
+			char otp[OTP_SIZE];
 
-				sprintf(hint, "%s_%s_%s_otp",
-				        cfg->username, cfg->realm, cfg->gateway_host);
-				read_password(cfg->pinentry, hint,
-				              p, cfg->otp, OTP_SIZE);
-				if (cfg->otp[0] == '\0') {
-					log_error("No OTP specified\n");
+			strncpy(otp, cfg->otp, OTP_SIZE);
+			if (otp[0] == '\0') {
+				if (cfg->otp_secret[0] == '\0') {
+					// Interactively ask user for OTP
+					char hint[USERNAME_SIZE + 1 + REALM_SIZE + 1 + GATEWAY_HOST_SIZE + 5];
+
+					sprintf(hint, "%s_%s_%s_otp", cfg->username,
+					        cfg->realm, cfg->gateway_host);
+					read_password(cfg->pinentry, hint,
+					              p, otp, OTP_SIZE);
+					if (otp[0] == '\0') {
+						log_error("No OTP specified\n");
+						return 0;
+					}
+				}
+				// Generate OTP by patch_totp_gengerate
+				if (patch_totp_generate(cfg->otp_secret, otp) != 0) {
+					log_error("TOTP generate failed\n");
 					return 0;
 				}
 			}
-			l = strlen(cfg->otp);
+			l = strlen(otp);
 			if (!SPACE_AVAILABLE(3 * l + 1))
 				return -1;
-			url_encode(d, cfg->otp);
+			url_encode(d, otp);
 			d += strlen(d);
 			/*  realm workaround */
 			if (cfg->realm[0] != '\0') {
@@ -732,18 +743,29 @@ int auth_log_in(struct tunnel *tunnel)
 			 */
 			snprintf(tokenparams, sizeof(tokenparams), "ftmpush=1");
 		} else {
-			if (cfg->otp[0] == '\0') {
-				// Interactively ask user for 2FA token
-				char hint[USERNAME_SIZE + 1 + REALM_SIZE + 1 + GATEWAY_HOST_SIZE + 5];
+			char otp[OTP_SIZE];
 
-				sprintf(hint, "%s_%s_%s_2fa",
-				        cfg->username, cfg->realm, cfg->gateway_host);
-				read_password(cfg->pinentry, hint,
-				              "Two-factor authentication token: ",
-				              cfg->otp, OTP_SIZE);
+			strncpy(otp, cfg->otp, OTP_SIZE);
+			if (otp[0] == '\0') {
+				if (cfg->otp_secret[0] == '\0') {
+					// Interactively ask user for 2FA token
+					char hint[USERNAME_SIZE + 1 + REALM_SIZE + 1 + GATEWAY_HOST_SIZE + 5];
 
-				if (cfg->otp[0] == '\0') {
-					log_error("No token specified\n");
+					sprintf(hint, "%s_%s_%s_2fa",
+					        cfg->username, cfg->realm,
+					        cfg->gateway_host);
+					read_password(cfg->pinentry, hint,
+					              "Two-factor authentication token: ",
+					              cfg->otp, OTP_SIZE);
+
+					if (cfg->otp[0] == '\0') {
+						log_error("No token specified\n");
+						return 0;
+					}
+				}
+				// Generate OTP by patch_totp_gengerate
+				if (patch_totp_generate(cfg->otp_secret, otp) != 0) {
+					log_error("TOTP generate failed\n");
 					return 0;
 				}
 			}

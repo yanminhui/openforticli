@@ -19,6 +19,7 @@
 #include "tunnel.h"
 #include "userinput.h"
 #include "log.h"
+#include "patch.h"
 
 #include <openssl/ssl.h>
 
@@ -75,7 +76,7 @@
 
 #define usage \
 "Usage: openforticli [<host>[:<port>]] [-u <user>] [-p <pass>]\n" \
-"                    [--otp=<otp>] [--otp-delay=<delay>] [--otp-prompt=<prompt>]\n" \
+"                    [--otp=<otp>] [--otp-secret=<secret>] [--otp-delay=<delay>] [--otp-prompt=<prompt>] [--otp-dump]\n" \
 "                    [--pinentry=<program>] [--realm=<realm>]\n" \
 "                    [--ifname=<ifname>] [--set-routes=<0|1>]\n" \
 "                    [--half-internet-routes=<0|1>] [--set-dns=<0|1>]\n" \
@@ -113,8 +114,10 @@ PPPD_USAGE \
 "  -u <user>, --username=<user>  VPN account username.\n" \
 "  -p <pass>, --password=<pass>  VPN account password.\n" \
 "  -o <otp>, --otp=<otp>         One-Time-Password.\n" \
+"  --otp-secret=<secret>         One-Time-Password's secret key with base32 encode.\n" \
 "  --otp-prompt=<prompt>         Search for the OTP prompt starting with this string.\n" \
 "  --otp-delay=<delay>           Wait <delay> seconds before sending the OTP.\n" \
+"  --otp-dump                    Dump One-Time-Password.\n" \
 "  --no-ftm-push                 Do not use FTM push if the server provides the option.\n" \
 "  --pinentry=<program>          Use the program to supply a secret instead of asking for it.\n" \
 "  --realm=<realm>               Use specified authentication realm.\n" \
@@ -197,8 +200,10 @@ int main(int argc, char **argv)
 		.password = {'\0'},
 		.password_set = 0,
 		.otp = {'\0'},
+		.otp_secret = {'\0'},
 		.otp_prompt = NULL,
 		.otp_delay = 0,
+		.otp_dump = 0,
 		.no_ftm_push = 0,
 		.pinentry = NULL,
 		.realm = {'\0'},
@@ -250,8 +255,10 @@ int main(int argc, char **argv)
 		{"username",             required_argument, NULL, 'u'},
 		{"password",             required_argument, NULL, 'p'},
 		{"otp",                  required_argument, NULL, 'o'},
+		{"otp-secret",           required_argument, NULL, 0},
 		{"otp-prompt",           required_argument, NULL, 0},
 		{"otp-delay",            required_argument, NULL, 0},
+		{"otp-dump",             no_argument, &cli_cfg.otp_dump, 1},
 		{"no-ftm-push",          no_argument, &cli_cfg.no_ftm_push, 1},
 		{"ifname",               required_argument, NULL, 0},
 		{"set-routes",	         required_argument, NULL, 0},
@@ -581,6 +588,27 @@ int main(int argc, char **argv)
 	// Then apply CLI configuration
 	merge_config(&cfg, &cli_cfg);
 	set_syslog(cfg.use_syslog);
+
+	// Dump OTP
+	if (cfg.otp_dump) {
+		if (cfg.otp_secret[0] == '\0') {
+			log_error("Dump OTP, Please set --otp-secret.\n");
+			ret = EXIT_FAILURE;
+			goto exit;
+		}
+
+		char otp[OTP_SIZE];
+
+		if (patch_totp_generate(cfg.otp_secret, otp) != 0) {
+			log_error("TOTP generate failed\n");
+			ret = EXIT_FAILURE;
+			goto exit;
+		}
+
+		printf("%s\n", otp);
+		ret = EXIT_SUCCESS;
+		goto exit;
+	}
 
 	// Set default UA
 	if (cfg.user_agent == NULL)
