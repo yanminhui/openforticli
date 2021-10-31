@@ -14,6 +14,11 @@ Releases
 This high level changelog is usually updated when a release is tagged.
 On the master branch there may be changes that are not (yet) described here.
 
+### 1.17.1.20211031
+
+* [+] support generate OTP by liboath
+* [+] support preferred host from host list
+
 ### 1.17.1
 
 * [-] fix regression: enable OpenSSL engines by default
