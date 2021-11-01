@@ -147,6 +147,10 @@ double ping_host_ip(const char *domain)
 	char *icmp;
 	int i;
 
+	int count = 8;
+	double expired_ms_array[8];
+	int expired_ms_size = 0;
+
 	struct timeval start;
 	struct timeval end;
 	struct sockaddr_in from;
@@ -205,8 +209,9 @@ double ping_host_ip(const char *domain)
 
 	log_debug("PING %s (%s).\n", domain, inet_ntoa(*((struct in_addr *)&dest_ip)));
 
-	for (i = 0; i < 8; i++) {
+	for (i = 0; i < count; i++) {
 		icmp_head->seq = htons(i);
+		icmp_head->check_sum = 0;
 		icmp_head->check_sum = generation_checksum((unsigned short *)icmp,
 		                       sizeof(icmp_header) + DATA_SIZE);
 		gettimeofday(&start, NULL);
@@ -219,52 +224,50 @@ double ping_host_ip(const char *domain)
 
 		from_packet_len = sizeof(from);
 		memset(recv_buf, 0, sizeof(recv_buf));
-		while (1) {
-			read_length = recvfrom(client_fd, recv_buf, 1024, 0,
-			                       (struct sockaddr *)&from,
-			                       &from_packet_len);
-			if (read_length == -1) {
-				log_error("receive data error!\n");
-				break;
-			}
-			gettimeofday(&end, NULL);
+		read_length = recvfrom(client_fd, recv_buf, 1024, 0,
+		                       (struct sockaddr *)&from, &from_packet_len);
+		if (read_length == -1) {
+			log_error("receive data error!\n");
+			continue;
+		}
+		gettimeofday(&end, NULL);
 
-			recv_ip_header = (ip_header *)recv_buf;
-			ip_ttl = (int)recv_ip_header->ip_ttl;
-			recv_icmp_header = (icmp_header *)
-			                   (recv_buf +
-			                    (recv_ip_header->ip_head_verlen & 0x0F) * 4);
-			if (recv_icmp_header->type != 0) {
-				log_error("error type %d received, error code %d \n",
-				          recv_icmp_header->type,
-				          recv_icmp_header->code);
-				break;
-			}
-			if (recv_icmp_header->id != icmp_head->id) {
-				log_error("some else's packet\n");
-				break;
-			}
-			if ((sizeof(ip_header) + sizeof(icmp_header) + DATA_SIZE) <=
-			    read_length) {
-				expired_ms = get_time_interval(&start, &end);
-				log_debug("%ld bytes from %s (%s): icmp_seq=%d ttl=%d time=%.2f ms\n",
-				          read_length, domain, inet_ntoa(from.sin_addr),
-				          recv_icmp_header->seq / 256,
-				          ip_ttl, expired_ms);
-				goto PING_EXIT;
-			}
-			break;
+		recv_ip_header = (ip_header *)recv_buf;
+		ip_ttl = (int)recv_ip_header->ip_ttl;
+		recv_icmp_header = (icmp_header *)(recv_buf +
+		                                   (recv_ip_header->ip_head_verlen
+		                                    & 0x0F) * 4);
+		if (recv_icmp_header->type != 0) {
+			log_error("error type %d received, error code %d \n",
+			          recv_icmp_header->type, recv_icmp_header->code);
+			continue;
+		}
+		if (recv_icmp_header->id != icmp_head->id) {
+			log_error("some else's packet\n");
+			continue;
+		}
+		if ((sizeof(ip_header) + sizeof(icmp_header) + DATA_SIZE) <=
+		    read_length) {
+			expired_ms = get_time_interval(&start, &end);
+			log_debug("%ld bytes from %s (%s): icmp_seq=%d ttl=%d time=%.2f ms\n",
+			          read_length, domain, inet_ntoa(from.sin_addr),
+			          recv_icmp_header->seq / 256, ip_ttl, expired_ms);
+			expired_ms_array[expired_ms_size++] = expired_ms;
 		}
 	}
 
-PING_EXIT:
 	if (icmp) {
 		free(icmp);
 		icmp = NULL;
 	}
 	if (client_fd != -1)
 		close(client_fd);
-	return expired_ms;
+
+	if (expired_ms_size == 0)
+		return expired_ms;
+	for (i = 0; i < expired_ms_size - 1; ++i)
+		expired_ms += expired_ms_array[i];
+	return expired_ms / expired_ms_size;
 }
 
 void preferred_host(char *hosts, char *output_host, size_t num)
